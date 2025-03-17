@@ -3,7 +3,7 @@
 @tailwind utilities;
  
 @layer base {
-  /* 
+   
     Norican’s main palette (from the existing CSS):
     - Background: #ffffff
     - Body text:  #57595b
@@ -13,7 +13,7 @@
     - Borders/lines: #cccccc
     - Muted/Light Gray: #ecedef
     - Dark Gray: #666666
-  */
+  
  
   :root {
     /* Base background and text */
