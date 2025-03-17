@@ -80,6 +80,10 @@ jobs:
             rg=${{ secrets.AZURE_RESOURCE_GROUP }}
             echo "Resource group: $rg"
             echo "App service name: ${{ secrets.AZURE_APP_SERVICE_NAME }}"
+            if [ -z "$rg" ]; then
+              echo "Error: Resource group not found."
+              exit 1
+            fi
             echo Setting SCM_DO_BUILD_DURING_DEPLOYMENT=false on app service ${{ secrets.AZURE_APP_SERVICE_NAME }}
             az webapp config appsettings set -n ${{ secrets.AZURE_APP_SERVICE_NAME }} -g $rg --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false -o none
             echo Setting --startup-file="node server.js" on app service ${{ secrets.AZURE_APP_SERVICE_NAME }}
