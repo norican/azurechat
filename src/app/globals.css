@@ -1,55 +1,120 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ 
 @layer base {
+  /* 
+    Norican’s main palette (from the existing CSS):
+    - Background: #ffffff
+    - Body text:  #57595b
+    - Primary (brand): #002F76
+    - Primary highlight: #FFC20E
+    - Secondary accent(s): #3589AA, #AE1231, #009900 (optional)
+    - Borders/lines: #cccccc
+    - Muted/Light Gray: #ecedef
+    - Dark Gray: #666666
+  */
+ 
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 136 80% 29%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    /* Base background and text */
+    --background: 255 100% 100%;       /* #ffffff */
+    --foreground: 210 6% 35%;         /* #57595b in HSL */
+ 
+    /* Cards / popovers: same as base in this example */
+    --card: 255 100% 100%;            /* #ffffff */
+    --card-foreground: 210 6% 35%;    /* #57595b */
+    --popover: 255 100% 100%;         /* #ffffff */
+    --popover-foreground: 210 6% 35%; /* #57595b */
+ 
+    /*
+      Primary brand color (#002F76) plus the highlight (#FFC20E). 
+      We'll treat #002F76 as --primary, 
+      and use #FFC20E as the foreground on that (or vice versa).
+    */
+    --primary: 213 100% 46%;          /* #002F76 in HSL */
+    --primary-foreground: 48 100% 53%;/* #FFC20E in HSL */
+ 
+    /*
+      Secondary color can be #FFC20E if you prefer it reversed, 
+      or pick from another brand color. 
+      Here, we’ll show #FFC20E as the “secondary” 
+      and use dark text (#333) as the contrast foreground.
+    */
+    --secondary: 48 100% 53%;         /* #FFC20E */
+    --secondary-foreground: 0 0% 20%; /* #333333 in HSL */
+ 
+    /*
+      ‘Muted’ backgrounds are often lighter grays. 
+      Norican uses #ecedef or #c6cdc6. 
+      We’ll pick #ecedef for a gentle muted background.
+    */
+    --muted: 220 6% 93%;              /* #ecedef in HSL */
+    --muted-foreground: 210 6% 35%;   /* #57595b */
+ 
+    /*
+      Accent could be #3589AA or #AE1231 or #009900, 
+      depending on your usage. Here we’ll use #3589AA as an example:
+    */
+    --accent: 196 52% 48%;            /* #3589AA in HSL */
+    --accent-foreground: 0 0% 100%;   /* #ffffff */
+ 
+    /*
+      Destructive typically a red. Norican uses #AE1231:
+    */
+    --destructive: 350 80% 40%;       /* #AE1231 in HSL */
+    --destructive-foreground: 0 0% 100%; /* #ffffff */
+ 
+    /* Borders, inputs, rings, etc. */
+    --border: 0 0% 80%;               /* #cccccc in HSL */
+    --input: 0 0% 100%;               /* #ffffff or #f2eeee if you prefer */
+    --ring: 213 100% 46%;             /* #002F76 as a focus ring color */
+ 
+    /*
+      Adjust border-radius to match Norican’s typical usage. 
+      E.g., .c-button had 2px = 0.125rem. 
+      Set to whichever you prefer:
+    */
+    --radius: 0.125rem;
   }
-
+ 
+  /*
+    If you need a “dark mode,” here’s an example 
+    that simply inverts or adjusts the same palette.
+    Norican doesn’t explicitly define a dark palette, 
+    so tweak as desired.
+  */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 136 80% 42%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9;
+    --background: 210 6% 35%;         /* #57595b as background */
+    --foreground: 0 0% 100%;          /* #ffffff text */
+ 
+    --card: 210 6% 25%;              /* a darker gray for cards */
+    --card-foreground: 0 0% 100%;    
+    --popover: 210 6% 25%;
+    --popover-foreground: 0 0% 100%;
+ 
+    --primary: 213 100% 46%;         /* #002F76 stays brand color */
+    --primary-foreground: 48 100% 53%;/* #FFC20E */
+ 
+    --secondary: 48 100% 53%;        /* #FFC20E */
+    --secondary-foreground: 0 0% 20%;/* #333333 */
+ 
+    --muted: 210 5% 20%;             /* deeper gray */
+    --muted-foreground: 0 0% 100%;
+ 
+    --accent: 196 52% 48%;           /* #3589AA */
+    --accent-foreground: 0 0% 100%;
+ 
+    --destructive: 350 80% 40%;      /* #AE1231 */
+    --destructive-foreground: 0 0% 100%;
+ 
+    --border: 210 6% 25%;            /* darker gray for borders */
+    --input: 210 6% 25%;             /* or lighter if you want contrast */
+    --ring: 48 100% 53%;             /* #FFC20E as ring highlight in dark mode */
   }
 }
-
+ 
 @layer base {
+  /* Apply them so that default backgrounds/text match the new palette */
   * {
     @apply border-border;
   }
