@@ -1,8 +1,12 @@
 name: Build & deploy Next.js app to Azure Web App
 
+# When this action will be executed
 on:
+  # Automatically trigger it when detected changes in repo
   push:
     branches: [main]
+
+  # Allow manual workflow trigger
   workflow_dispatch:
 
 jobs:
@@ -24,6 +28,7 @@ jobs:
           npm install
           npm run build --if-present
           cd ..
+
       - name: 📂 Copy standalone into the root
         run: cp -R ./src/.next/standalone ./site-deploy
 
@@ -37,11 +42,13 @@ jobs:
         run: |
           cd ./site-deploy
           zip Nextjs-site.zip ./* .next -qr
+
       - name: 🔍 Diagnostics
         run: |
           ls ./src
           ls ./src/.next
           ls ./site-deploy
+
       - name: ⬆️ Publish Next Application artifact
         uses: actions/upload-artifact@v4
         with:
@@ -70,27 +77,18 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      # Set the build during deployment setting to false. This setting was added in the templates to all azd to work, but breaks deployment via webapps-deploy
       - name: Azure CLI script
         uses: azure/CLI@v2.1.0
         with:
           inlineScript: |
-            echo "Setting subscription context..."
-            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-            echo "Current subscription:"
-            az account show --query "{SubscriptionId:id, SubscriptionName:name}"
-            echo "Retrieving resource group..."
-            rg=${{ secrets.AZURE_RESOURCE_GROUP }}
-            echo "Resource group: $rg"
-            echo "App service name: ${{ secrets.AZURE_APP_SERVICE_NAME }}"
-            if [ -z "$rg" ]; then
-              echo "Error: Resource group not found."
-              exit 1
-            fi
+            rg=$(az webapp list --query "[?name=='${{ secrets.AZURE_APP_SERVICE_NAME }}'].resourceGroup" --output tsv)
             echo Setting SCM_DO_BUILD_DURING_DEPLOYMENT=false on app service ${{ secrets.AZURE_APP_SERVICE_NAME }}
             az webapp config appsettings set -n ${{ secrets.AZURE_APP_SERVICE_NAME }} -g $rg --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false -o none
-            echo Setting --startup-file="node server.js" on app service ${{ secrets.AZURE_APP_SERVICE_NAME }}
+            echo Setting --startup-file=\"node server.js\" on app service ${{ secrets.AZURE_APP_SERVICE_NAME }}
             az webapp config set --startup-file="node server.js" -n ${{ secrets.AZURE_APP_SERVICE_NAME }} -g $rg -o none
             sleep 10
+
       - name: 🚀 Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3.0.1
@@ -99,5 +97,4 @@ jobs:
           package: ${{ github.workspace }}/Nextjs-site.zip
 
       - name: 🧹 Cleanup
-        run: rm ${{ github.workspace }}/Nextjs-site.zip
         run: rm ${{ github.workspace }}/Nextjs-site.zip
