@@ -74,7 +74,9 @@ jobs:
         uses: azure/CLI@v2.1.0
         with:
           inlineScript: |
-            echo "Using resource group from secret..."
+            echo "Setting subscription context..."
+            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            echo "Retrieving resource group..."
             rg=${{ secrets.AZURE_RESOURCE_GROUP }}
             echo "Resource group: $rg"
             echo "App service name: ${{ secrets.AZURE_APP_SERVICE_NAME }}"
